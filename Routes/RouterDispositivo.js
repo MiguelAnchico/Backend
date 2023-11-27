@@ -25,7 +25,7 @@ router.post("/", createDispositivo);
 router.put("/:id", updateDispositivo);
 
 // Ruta para actualizar el estado del aspersor
-router.put("/dispositivo/:id/aspersor", updateAspersorEstado);
+router.put("/:id/aspersor", updateAspersorEstado);
 
 // Ruta para agregar actualizaciones del aspersor
 router.patch("/:id/lecturas", addTemperaturaHumedad);
