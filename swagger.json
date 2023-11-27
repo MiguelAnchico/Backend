@@ -1,0 +1,277 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mi API de Node.js",
+    "version": "1.0.0",
+    "description": "API para gestionar dispositivos relacionados con serpientes."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor de desarrollo"
+    }
+  ],
+  "paths": {
+    "/api/dispositivo": {
+      "get": {
+        "summary": "Obtiene una lista de todos los dispositivos",
+        "tags": ["Dispositivo"],
+        "responses": {
+          "200": {
+            "description": "Lista de dispositivos obtenida con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dispositivo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Crea un nuevo dispositivo",
+        "tags": ["Dispositivo"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Dispositivo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Dispositivo creado con éxito"
+          }
+        }
+      }
+    },
+    "/api/dispositivo/{id}": {
+      "get": {
+        "summary": "Obtiene un dispositivo por su ID",
+        "tags": ["Dispositivo"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dispositivo encontrado con éxito"
+          },
+          "404": {
+            "description": "Dispositivo no encontrado"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualiza un dispositivo por su ID",
+        "tags": ["Dispositivo"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Dispositivo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dispositivo actualizado con éxito"
+          },
+          "404": {
+            "description": "Dispositivo no encontrado"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Elimina un dispositivo por su ID",
+        "tags": ["Dispositivo"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dispositivo eliminado con éxito"
+          },
+          "404": {
+            "description": "Dispositivo no encontrado"
+          }
+        }
+      }
+    },
+    "/api/dispositivo/{id}/aspersor": {
+      "put": {
+        "summary": "Actualiza el estado del aspersor de un dispositivo por su ID",
+        "tags": ["Dispositivo"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prenderAspersor": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Estado del aspersor actualizado con éxito"
+          },
+          "404": {
+            "description": "Dispositivo no encontrado"
+          }
+        }
+      }
+    },
+    "/api/dispositivo/{id}/lecturas": {
+      "patch": {
+        "summary": "Añade registros de temperatura y humedad a un dispositivo específico",
+        "tags": ["Dispositivo"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID del dispositivo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "temperatura": {
+                    "$ref": "#/components/schemas/Lectura"
+                  },
+                  "humedad": {
+                    "$ref": "#/components/schemas/Lectura"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lecturas añadidas con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispositivo"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dispositivo no encontrado"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Dispositivo": {
+        "type": "object",
+        "required": ["ajusteTemperatura", "tiempoAspersor", "prenderAspersor"],
+        "properties": {
+          "animalId": {
+            "type": "string",
+            "description": "ID de la serpiente asociada al dispositivo"
+          },
+          "temperatura": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lectura"
+            }
+          },
+          "humedad": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lectura"
+            }
+          },
+          "ajusteTemperatura": {
+            "type": "number"
+          },
+          "tiempoAspersor": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "prenderAspersor": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Lectura": {
+        "type": "object",
+        "properties": {
+          "superior": {
+            "type": "number",
+            "description": "Valor superior de la lectura"
+          },
+          "inferior": {
+            "type": "number",
+            "description": "Valor inferior de la lectura"
+          },
+          "fechaRegistro": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha y hora en la que se registró la lectura"
+          }
+        }
+      }
+    }
+  }
+}

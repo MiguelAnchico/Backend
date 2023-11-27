@@ -9,6 +9,7 @@ const {
   updateDispositivo,
   deleteDispositivo,
   updateAspersorEstado,
+  addTemperaturaHumedad,
 } = require("../Controllers/ControllerDispositivo");
 
 // Ruta para obtener todos los dispositivos
@@ -25,6 +26,9 @@ router.put("/:id", updateDispositivo);
 
 // Ruta para actualizar el estado del aspersor
 router.put("/dispositivo/:id/aspersor", updateAspersorEstado);
+
+// Ruta para agregar actualizaciones del aspersor
+router.patch("/:id/lecturas", addTemperaturaHumedad);
 
 // Ruta para eliminar un dispositivo por su ID
 router.delete("/:id", deleteDispositivo);

@@ -80,6 +80,34 @@ const updateAspersorEstado = async (req, res) => {
   }
 };
 
+const addTemperaturaHumedad = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { temperatura, humedad } = req.body;
+
+    // Encuentra el dispositivo por ID y actualiza las lecturas de temperatura y humedad
+    const dispositivo = await Dispositivo.findById(id);
+
+    if (!dispositivo) {
+      return res.status(404).json({ message: "Dispositivo no encontrado" });
+    }
+
+    // Añade las nuevas lecturas a las listas correspondientes
+    dispositivo.temperatura.push(temperatura);
+    dispositivo.humedad.push(humedad);
+
+    // Guarda los cambios en la base de datos
+    await dispositivo.save();
+
+    res.status(200).json({
+      message: "Lecturas añadidas con éxito",
+      dispositivo: dispositivo,
+    });
+  } catch (error) {
+    errorHandler(error, req, res);
+  }
+};
+
 // Eliminar un dispositivo por ID
 const deleteDispositivo = async (req, res) => {
   try {
@@ -96,5 +124,6 @@ module.exports = {
   createDispositivo,
   updateDispositivo,
   updateAspersorEstado,
+  addTemperaturaHumedad,
   deleteDispositivo,
 };

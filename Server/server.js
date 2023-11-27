@@ -1,4 +1,8 @@
 require("dotenv").config();
+
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerDocument = require("../swagger.json");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -36,6 +40,23 @@ class Server {
     }
   }
 
+  addSwagger() {
+    const options = {
+      definition: {
+        openapi: "3.0.0",
+        info: {
+          title: "Mi API de Node.js",
+          version: "1.0.0",
+        },
+      },
+      apis: ["../Routes/*.js"],
+    };
+
+    const swaggerSpec = swaggerJsdoc(options);
+
+    this.app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  }
+
   addMiddlewares() {
     this.app.use(cors());
     this.app.use(bodyParser.json());
@@ -50,6 +71,7 @@ class Server {
       require("../Routes/RouterDispositivo")
     );
     this.app.use(this.paths.usuario, require("../Routes/RouterUsuario"));
+    this.addSwagger();
   }
 
   listen() {
