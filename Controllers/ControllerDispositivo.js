@@ -1,5 +1,9 @@
 const Dispositivo = require("../Models/Dispositivo");
 const errorHandler = require("../Helpers/errorHandler");
+const moment = require("moment-timezone");
+require("moment/locale/es");
+
+moment.locale("es");
 
 // Obtener todos los dispositivos
 const getDispositivos = async (req, res) => {
@@ -20,17 +24,35 @@ const getDispositivoById = async (req, res) => {
     }
 
     // Obtener los últimos 10 valores de temperatura y humedad
-    const ultimasTemperaturas = dispositivo.temperatura.slice(-10);
-    const ultimasHumedades = dispositivo.humedad.slice(-10);
+    const ultimasTemperaturas = dispositivo.temperatura
+      .slice(-10)
+      .map((lectura) => ({
+        superior: lectura.superior,
+        inferior: lectura.inferior,
+        promedio: (lectura.superior + lectura.inferior) / 2,
+        fechaRegistro: lectura.fechaRegistro,
+        fechaRegistroLectura: moment(lectura.fechaRegistro)
+          .tz("America/Bogota")
+          .fromNow(),
+      }));
+    const ultimasHumedades = dispositivo.humedad.slice(-10).map((lectura) => ({
+      superior: lectura.superior,
+      inferior: lectura.inferior,
+      promedio: (lectura.superior + lectura.inferior) / 2,
+      fechaRegistro: lectura.fechaRegistro,
+      fechaRegistroLectura: moment(lectura.fechaRegistro)
+        .tz("America/Bogota")
+        .fromNow(),
+    }));
 
-    // Crear un nuevo objeto con los datos limitados
-    const dispositivoLimitado = {
+    // Crear un nuevo objeto con los promedios de temperatura y humedad
+    const dispositivoConPromedios = {
       ...dispositivo.toObject(), // Convertir a un objeto simple si es un documento Mongoose
       temperatura: ultimasTemperaturas,
       humedad: ultimasHumedades,
     };
 
-    res.json(dispositivoLimitado);
+    res.json(dispositivoConPromedios);
   } catch (error) {
     errorHandler(error, req, res);
   }
