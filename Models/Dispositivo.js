@@ -16,7 +16,8 @@ const dispositivoSchema = new Schema({
   temperatura: [lecturaSchema],
   humedad: [lecturaSchema],
   ajusteTemperatura: { type: Number, required: true },
-  tiempoAspersor: { type: Date, required: true },
+  tiempoAspersor: { type: Number, required: true },
+  duracionAspersor: { type: Number, required: true },
   prenderAspersor: { type: Boolean, required: true },
 });
 
