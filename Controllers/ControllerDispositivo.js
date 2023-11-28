@@ -18,7 +18,19 @@ const getDispositivoById = async (req, res) => {
     if (!dispositivo) {
       return res.status(404).json({ message: "Dispositivo no encontrado" });
     }
-    res.json(dispositivo);
+
+    // Obtener los últimos 10 valores de temperatura y humedad
+    const ultimasTemperaturas = dispositivo.temperatura.slice(-10);
+    const ultimasHumedades = dispositivo.humedad.slice(-10);
+
+    // Crear un nuevo objeto con los datos limitados
+    const dispositivoLimitado = {
+      ...dispositivo.toObject(), // Convertir a un objeto simple si es un documento Mongoose
+      temperatura: ultimasTemperaturas,
+      humedad: ultimasHumedades,
+    };
+
+    res.json(dispositivoLimitado);
   } catch (error) {
     errorHandler(error, req, res);
   }
