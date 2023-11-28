@@ -4,7 +4,7 @@ const errorHandler = require("../Helpers/errorHandler");
 // Obtener todos los dispositivos
 const getDispositivos = async (req, res) => {
   try {
-    const dispositivos = await Dispositivo.find().populate("animalId");
+    const dispositivos = await Dispositivo.find();
     res.json(dispositivos);
   } catch (error) {
     errorHandler(error, req, res);
@@ -47,7 +47,7 @@ const updateDispositivo = async (req, res) => {
       req.params.id,
       req.body,
       { new: true }
-    ).populate("animalId");
+    );
     if (!dispositivoActualizado) {
       return res.status(404).json({ message: "Dispositivo no encontrado" });
     }
@@ -67,7 +67,7 @@ const updateAspersorEstado = async (req, res) => {
       req.params.id,
       { prenderAspersor },
       { new: true }
-    ).populate("animalId");
+    );
     if (!dispositivoActualizado) {
       return res.status(404).json({ message: "Dispositivo no encontrado" });
     }

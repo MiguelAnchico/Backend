@@ -13,11 +13,6 @@ const lecturaSchema = new Schema(
 );
 
 const dispositivoSchema = new Schema({
-  animalId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Serpiente",
-    required: false,
-  },
   temperatura: [lecturaSchema],
   humedad: [lecturaSchema],
   ajusteTemperatura: { type: Number, required: true },
