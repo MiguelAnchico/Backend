@@ -82,17 +82,22 @@ const addTemperaturaHumedad = async (req, res) => {
   try {
     const { id } = req.params;
     const { temperatura, humedad } = req.body;
+    const fechaRegistro = new Date(); // Obtiene la fecha y hora actuales
 
-    // Encuentra el dispositivo por ID y actualiza las lecturas de temperatura y humedad
+    // Encuentra el dispositivo por ID
     const dispositivo = await Dispositivo.findById(id);
 
     if (!dispositivo) {
       return res.status(404).json({ message: "Dispositivo no encontrado" });
     }
 
+    // Modifica los objetos de temperatura y humedad para incluir la fecha de registro
+    const nuevaTemperatura = { ...temperatura, fechaRegistro };
+    const nuevaHumedad = { ...humedad, fechaRegistro };
+
     // Añade las nuevas lecturas a las listas correspondientes
-    dispositivo.temperatura.push(temperatura);
-    dispositivo.humedad.push(humedad);
+    dispositivo.temperatura.push(nuevaTemperatura);
+    dispositivo.humedad.push(nuevaHumedad);
 
     // Guarda los cambios en la base de datos
     await dispositivo.save();
