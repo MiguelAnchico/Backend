@@ -14,9 +14,7 @@ const getDispositivos = async (req, res) => {
 // Obtener un dispositivo por ID
 const getDispositivoById = async (req, res) => {
   try {
-    const dispositivo = await Dispositivo.findById(req.params.id).populate(
-      "animalId"
-    );
+    const dispositivo = await Dispositivo.findById(req.params.id);
     if (!dispositivo) {
       return res.status(404).json({ message: "Dispositivo no encontrado" });
     }
